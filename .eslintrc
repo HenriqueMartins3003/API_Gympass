@@ -1,4 +1,12 @@
 {
+    "overrides": [
+        {
+            "files":["*.mjs"],
+            "parserOptions": {
+                "sourceType": "module"
+            }
+        }
+    ],
     "extends":[
         "@rocketseat/eslint-config/node"
     ],
