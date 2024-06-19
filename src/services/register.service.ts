@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma"
 import { userRepository } from "@/repositories/users-repository"
 import {hash} from "bcryptjs"
+import { userAlreadyExistsError } from "./errors/user-already-exists-error"
 
 
 interface RegisterServiceRequest {
@@ -20,7 +21,7 @@ export class RegisterService {
         const userExists = await this.userRepository.findByEmail(email)
       
         if (userExists){
-               throw new Error()
+               throw new userAlreadyExistsError()
         }
         
 
