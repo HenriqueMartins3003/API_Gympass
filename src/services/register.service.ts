@@ -19,7 +19,7 @@ export class RegisterService {
 
     }
 
-    async execute({email,password,name}:RegisterServiceRequest): Promise<RegisterServiceResponse>{
+    async execute({email,name,password}:RegisterServiceRequest): Promise<RegisterServiceResponse>{
         
         const password_hash = await hash(password,6)
         
