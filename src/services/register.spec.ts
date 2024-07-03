@@ -12,11 +12,18 @@ describe('Register Service', () => {
         usersRepository = new InMemoryUserRepository();
         sut = new RegisterService(usersRepository)
     })
-    it('Should hash user password upon registration', async ()=> {
-       const userRepository = new InMemoryUserRepository()
-        const registerService = new RegisterService(userRepository)
 
-       const {user} = await registerService.execute({
+    it('Should be able to register', async ()=> {
+        const {user} = await sut.execute({
+            name:'John Doe',
+            email: 'johnDoe@example.com',
+            password: '123456'
+        })
+        expect(user.id).toEqual(expect.any(String))
+    })
+    it('Should hash user password upon registration', async ()=> {
+     
+       const {user} = await sut.execute({
             name:'John Doe',
             email: 'johnDoe@example.com',
             password: '123456'
