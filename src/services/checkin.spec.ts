@@ -2,14 +2,28 @@ import {expect, describe,it, beforeEach, afterEach,vi} from 'vitest'
 import { CheckInService } from './checkin.service'
 import { InMemoryCheckInRepository } from '@/repositories/in-memory/in-memory-check-ins-repository'
 import { randomUUID } from 'crypto'
+import { InMemoryGymRepository } from '@/repositories/in-memory/in-memory-gym-repository'
+import { Decimal } from '@prisma/client/runtime/library'
 
 let checkInRepository: InMemoryCheckInRepository
+let gymsRepository: InMemoryGymRepository
 let sut: CheckInService
 
 describe('Check-in Service', () => {
     beforeEach(() => {
         checkInRepository = new InMemoryCheckInRepository();
-        sut = new CheckInService(checkInRepository)
+        gymsRepository = new InMemoryGymRepository()
+        sut = new CheckInService(checkInRepository,gymsRepository)
+
+        gymsRepository.gyms.push({
+            id: 'gym-01',
+            title: 'Js Gym',
+            description: 'Gym JS',
+            phone: '',
+            latitude: new Decimal(-22.970722),
+            longtitude: new Decimal(-43.182365)
+        })
+        
         vi.useFakeTimers()
     })
 
@@ -17,10 +31,11 @@ describe('Check-in Service', () => {
         vi.useRealTimers()
     })
     it('Should be able to Check in', async ()=> {
-        
         const {checkIn} = await sut.execute({
-            gymId: randomUUID(),
-            userId: randomUUID()
+            gymId: 'gym-01',
+            userId: 'user-01',
+            userLatitude: -22.970722,
+            userLongitude: -43.182365
             
         })
          
@@ -30,13 +45,17 @@ describe('Check-in Service', () => {
         vi.setSystemTime(new Date(2022,0,20,8,0,0))
          await sut.execute({
              gymId: 'gym-01',
-             userId: 'user-01'
+             userId: 'user-01',
+             userLatitude: -22.970722,        
+             userLongitude: -43.182365
             
         })
         await expect(async () => {
            await sut.execute({
                 gymId: 'gym-01',
-                userId: 'user-01'
+                userId: 'user-01',
+                userLatitude: -22.970722,        
+                userLongitude: -43.182365
             })
         }).rejects.toBeInstanceOf(Error)
     })
@@ -45,7 +64,9 @@ describe('Check-in Service', () => {
         vi.setSystemTime(new Date(2022,0,20,8,0,0))
          await sut.execute({
              gymId: 'gym-01',
-             userId: 'user-01'
+             userId: 'user-01',
+             userLatitude: -22.970722,        
+             userLongitude: -43.182365
             
         })
         vi.setSystemTime(new Date(2022,0,21,8,0,0))
@@ -53,10 +74,33 @@ describe('Check-in Service', () => {
         const {checkIn} = await sut.execute(
             {
                 gymId: 'gym-01',
-                userId: 'user-01'
+                userId: 'user-01',
+                userLatitude: -22.970722,            
+                userLongitude: -43.182365
             })
 
         expect(checkIn?.id).toEqual(expect.any(String))
+        
+    })
+    it('Should not be able to Check-in on a distant gym', async ()=> {
+        gymsRepository.gyms.push({
+            id: 'gym-02',
+            title: 'Js Gym',
+            description: 'Gym JS',
+            phone: '',
+            latitude: new Decimal(-23.6019924),
+            longtitude: new Decimal(-46.6150939)
+        })
+
+        expect( async () => { 
+            const {checkIn} = await sut.execute({
+                gymId: 'gym-02',
+                userId: 'user-01',
+                userLatitude: -23.6047771,
+                userLongitude: -46.6071492
+            
+            })
+        }).rejects.toBeInstanceOf(Error)
         
     })
 }) 
