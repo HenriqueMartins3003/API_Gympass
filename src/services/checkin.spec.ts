@@ -4,18 +4,20 @@ import { InMemoryCheckInRepository } from '@/repositories/in-memory/in-memory-ch
 import { randomUUID } from 'crypto'
 import { InMemoryGymRepository } from '@/repositories/in-memory/in-memory-gym-repository'
 import { Decimal } from '@prisma/client/runtime/library'
+import { MaxDistanceError } from './errors/max-distance-error'
+import { MaxNumberOfCheckInError } from './errors/max-number-of-checkin-error'
 
 let checkInRepository: InMemoryCheckInRepository
 let gymsRepository: InMemoryGymRepository
 let sut: CheckInService
 
 describe('Check-in Service', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
         checkInRepository = new InMemoryCheckInRepository();
         gymsRepository = new InMemoryGymRepository()
         sut = new CheckInService(checkInRepository,gymsRepository)
 
-        gymsRepository.gyms.push({
+        await gymsRepository.create({
             id: 'gym-01',
             title: 'Js Gym',
             description: 'Gym JS',
@@ -57,7 +59,7 @@ describe('Check-in Service', () => {
                 userLatitude: -22.970722,        
                 userLongitude: -43.182365
             })
-        }).rejects.toBeInstanceOf(Error)
+        }).rejects.toBeInstanceOf(MaxNumberOfCheckInError)
     })
     
     it('Should  be able to Check in twice but in different days', async ()=> {
@@ -100,7 +102,7 @@ describe('Check-in Service', () => {
                 userLongitude: -46.6071492
             
             })
-        }).rejects.toBeInstanceOf(Error)
+        }).rejects.toBeInstanceOf(MaxDistanceError)
         
     })
 }) 
