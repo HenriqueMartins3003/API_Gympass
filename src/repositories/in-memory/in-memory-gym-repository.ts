@@ -6,6 +6,12 @@ export class InMemoryGymRepository implements GymRepository {
     
     public gyms: Gym[] = []
     
+    async searchMany(query: string, page: number) {
+        
+        return this.gyms.filter((item) => item.title.includes(query))
+        .slice((page - 1) * 20,page * 20)
+    }
+    
     async create(data: Prisma.GymCreateInput) {
         
         const gym = {
