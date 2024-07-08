@@ -24,10 +24,8 @@ export class RegisterService {
         const password_hash = await hash(password,6)
         
         const userExists = await this.userRepository.findByEmail(email)
-        console.log(userExists,"#######")
         
         if (userExists){
-            console.log("Passei aqui!!!")
                throw new userAlreadyExistsError()
         }
         
