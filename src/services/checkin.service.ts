@@ -1,6 +1,6 @@
 import { InvalidCredentialsError } from "./errors/invalid-credentials-error";
 import { CheckIn } from "@prisma/client";
-import { CheckInsRepository } from "@/repositories/prisma/check-ins-repository";
+import { CheckInsRepository } from "@/repositories/check-ins-repository";
 import { GymRepository } from "@/repositories/gym-repository";
 import { ResourceNotFoundError } from "./errors/resource-not-found-error";
 import { getDistanceBetweenCoordinates } from "@/utils/get-distance-between-coordinates";
