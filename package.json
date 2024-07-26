@@ -3,14 +3,20 @@
   "version": "1.0.0",
   "description": "api solid",
   "main": "index.js",
+  
   "scripts": {
     "start:dev": "tsx watch src/server.ts",
     "start": "node build/server.js",
+    "test:create-prisma-environment": "npm link ./prisma/vitest-environment-prisma",
+    "test:install-prisma-environment": "npm link vitest-environment-prisma",
     "build": "tsup src --out-dir build",
-    "test": "vitest run",
-    "test:watch": "vitest",
+    "test": "vitest run --dir src/services",
+    "test:watch": "vitest --dir src/services",
+    "pretest:e2e": "run-s test:create-prisma-environment test:install-prisma-environment",
+    "test:e2e": "vitest run --dir src/http",
+    "test:e2e:watch": "vitest --dir src/http",
     "test:coverage": "vitest run --coverage",
-    "test:ui": "vitest --ui --api 9527"
+    "test:ui": "vitest --ui"
   },
   "author": "",
   "license": "ISC",
@@ -20,6 +26,7 @@
     "@types/node": "20.12.13",
     "@vitest/coverage-v8": "1.6.0",
     "@vitest/ui": "1.6.0",
+    "npm-run-all": "4.1.5",
     "eslint": "9.4.0",
     "globals": "15.3.0",
     "prisma": "5.14.0",
