@@ -2,7 +2,7 @@ import { PrismaCheckInsRepository } from "@/repositories/prisma/prisma-check-ins
 import { ValidateCheckInService } from "../validate-check-in.service";
 ;
 
-export function makeGetUserMetricsService () {
+export function makeValidateCheckInService () {
     const checkInsRepository = new PrismaCheckInsRepository()
         
     const service = new ValidateCheckInService(checkInsRepository)

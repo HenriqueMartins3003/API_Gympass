@@ -2,8 +2,6 @@ import { makeCreateGymService } from '@/services/factories/make-create-gym.servi
 import {FastifyRequest, FastifyReply} from 'fastify'
 import {z} from 'zod'
 
-
-
 export const create = async (request: FastifyRequest , reply: FastifyReply) => {
     
     const createGymBodySchema = z.object({
@@ -28,6 +26,4 @@ export const create = async (request: FastifyRequest , reply: FastifyReply) => {
         
     return reply.status(201).send()
     
-
-
 }
