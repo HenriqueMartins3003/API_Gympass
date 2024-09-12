@@ -1,6 +1,7 @@
 import {app} from "@/fastify/app"
 import { afterAll, beforeAll, describe,expect,it } from "vitest";
 import request from 'supertest'
+import { createAndAuthenticateUser } from "@/utils/test/create-and-authenticate-user";
 
 describe("Profile (E2E)",() => {
 
@@ -12,18 +13,7 @@ describe("Profile (E2E)",() => {
     })
     it('should be able to user Profile', async () => {
       
-        await request(app.server).post("/users").send({
-            name: 'John Doe',
-            email: 'johndoe@example.com',
-            password: '1234567'
-        })
-      
-        const authResponse = await request(app.server).post("/sessions").send({
-            email: 'johndoe@example.com',
-            password: '1234567'
-        })
-        
-        const { token } = authResponse.body
+        const { token } = await createAndAuthenticateUser(app)
 
         const profileResponse = await request(app.server)
         .get('/me').set('Authorization',`Bearer ${token}`)
