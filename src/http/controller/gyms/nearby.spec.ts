@@ -45,9 +45,7 @@ describe("Search Gyms (E2E)",() => {
         })
         .set('Authorization',`Bearer ${token}`)
         .send()
-        
-        console.log(response.body)
-        
+            
         expect(response.statusCode).toEqual(200)
         expect(response.body.gyms).toHaveLength(1)
         expect(response.body.gyms).toEqual([

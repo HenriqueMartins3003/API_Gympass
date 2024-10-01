@@ -1,5 +1,5 @@
 import { CheckIn } from "@prisma/client";
-import { CheckInsRepository } from "@/repositories/prisma/check-ins-repository";
+import { PrismaCheckInsRepository } from "@/repositories/prisma/prisma-check-ins-repository";
 
 interface FetchUsersCheckInHistoryServiceRequest {
     userId: string
@@ -15,7 +15,7 @@ export class FetchUsersCheckInHistoryService {
 
     
     constructor(
-        private checkInsRepository: CheckInsRepository,
+        private checkInsRepository: PrismaCheckInsRepository,
     ){
         
     }   

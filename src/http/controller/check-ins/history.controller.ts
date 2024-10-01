@@ -18,5 +18,5 @@ export const history = async (request: FastifyRequest , reply: FastifyReply) => 
         userId: request.user.sub
      });
         
-    return reply.status(200).send(checkIns)
+    return reply.status(200).send({checkIns})
 }
