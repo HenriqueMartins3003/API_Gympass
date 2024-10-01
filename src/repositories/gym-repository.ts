@@ -2,7 +2,7 @@ import { Gym, Prisma } from "@prisma/client";
 
 export interface findManyNearbyParamns{
     latitude: number
-    longitude: number
+    longtitude: number
 }
 export interface GymRepository {
     searchMany(query: string, page: number):Promise<Gym[]>

@@ -2,7 +2,6 @@ import request from 'supertest'
 import { app } from "@/fastify/app"
 import { afterAll, beforeAll, describe,expect,it } from "vitest";
 import { createAndAuthenticateUser } from "@/utils/test/create-and-authenticate-user";
-import { title } from 'process';
 
 describe("Search Gyms (E2E)",() => {
 
@@ -12,7 +11,7 @@ describe("Search Gyms (E2E)",() => {
     afterAll(async () => {
         await app.close()
     })
-    it('should be able to search for a GYM by title', async () => {
+    it('should be able to list nearby gyms', async () => {
       
         const { token } = await createAndAuthenticateUser(app)
 
@@ -20,36 +19,40 @@ describe("Search Gyms (E2E)",() => {
         .post('/gyms')
         .set('Authorization',`Bearer ${token}`)
         .send({
-            title: "gym-01",
+            title: "JavaScript GYM",
             description: "Gym JS",
             phone: "987654",
-            latitude: -27.2892052,
-            longitude: -49.6481091
+            latitude: -23.6097523,
+            longitude: -46.6131605
         })
 
         await request(app.server)
         .post('/gyms')
         .set('Authorization',`Bearer ${token}`)
         .send({
-            title: "gym-02",
-            description: "Gym JS",
+            title: "TypeScript GYM",
+            description: "Gym TS",
             phone: "987654",
-            latitude: -27.2892032,
-            longitude: -49.6481081
+            latitude: -23.9549098,
+            longitude: -46.3868863
         })
 
         const response = await request(app.server)
-        .get('/gyms/search')
+        .get('/gyms/nearby')
+        .query({
+            latitude: -23.9549098,
+            longitude: -46.3868863
+        })
         .set('Authorization',`Bearer ${token}`)
-        .query({ q: 'gym-01' })
         .send()
-    
-
+        
+        console.log(response.body)
+        
         expect(response.statusCode).toEqual(200)
         expect(response.body.gyms).toHaveLength(1)
         expect(response.body.gyms).toEqual([
             expect.objectContaining({
-                title: 'gym-01'
+                title: 'TypeScript GYM'
             })
         ])
     })
