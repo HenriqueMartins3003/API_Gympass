@@ -4,26 +4,14 @@ import { InvalidCredentialsError } from '@/services/errors/invalid-credentials-e
 import { makeAuthenticateService } from '@/services/factories/make-authenticate.service'
 
 
-export const authenticate = async (request: FastifyRequest , reply: FastifyReply) => {
-    const authenticateBodySchema = z.object({
-        email: z.string().email(),
-        password: z.string().min(6),
-    })
-
-    
-    const {email,password} = authenticateBodySchema.parse(request.body)
-
-    try {
-
-        const authenticateService = makeAuthenticateService();
-        
-        const {user} = await authenticateService.execute({email,password});
+export const refresh = async (request: FastifyRequest , reply: FastifyReply) => {
+    await request.jwtVerify({ onlyCookie: true })
 
         const token = await reply.jwtSign(
             {},
             {
                 sign: {
-                    sub: user.id
+                    sub: request.user.sub
                 }
             }
         )
@@ -31,7 +19,7 @@ export const authenticate = async (request: FastifyRequest , reply: FastifyReply
             {},
             {
                 sign: {
-                    sub: user.id,
+                    sub: request.user.sub,
                     expiresIn: '7d'
                 }
             }
@@ -44,12 +32,5 @@ export const authenticate = async (request: FastifyRequest , reply: FastifyReply
             httpOnly: true
         })
         .send({token})
-    } catch (error) {
-        if(error instanceof InvalidCredentialsError){
-            return reply.status(400).send({message: error.message})
-        }
-        throw error
-    }
-
-
+    
 }
