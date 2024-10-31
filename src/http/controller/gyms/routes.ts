@@ -8,7 +8,7 @@ import { searchNearby } from "./nearby.controller"
 import { verifyUserRole } from "@/http/middlewares/verify-user-role"
 
 export const gymRoutes = async (app: FastifyInstance) => {
-    //app.addHook('onRequest', verifyJWT)
+    app.addHook('onRequest', verifyJWT)
 
     app.get('/gyms/search', search)
     app.get('/gyms/nearby', searchNearby)
