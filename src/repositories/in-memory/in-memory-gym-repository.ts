@@ -9,7 +9,7 @@ export class InMemoryGymRepository implements GymRepository {
     async findManyNearby(params: findManyNearbyParamns) {
         return this.gyms.filter((item) => {
             const distance = getDistanceBetweenCoordinates(
-                {latitude: params.latitude, longitude: params.longitude},
+                {latitude: params.latitude, longitude: params.longtitude},
                 {latitude: item.latitude.toNumber(), longitude: item.longtitude.toNumber()}
             )
          return distance < 10   

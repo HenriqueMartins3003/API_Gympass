@@ -30,7 +30,7 @@ describe('Fetch user Check-in history Service', () => {
        })
        
 
-       const {gyms} = await sut.execute({user_latitude: -23.6097523, user_longitude: -46.6131605})
+       const { gyms } = await sut.execute({user_latitude: -23.6097523, user_longitude: -46.6131605})
 
        expect(gyms).toHaveLength(1)
        expect(gyms).toEqual([
